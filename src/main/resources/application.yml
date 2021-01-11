@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    function:
+      #定义绑定到外部destination的函数bean，如果只有一个函数可以不配置
+      definition: consume; #uppercase;stringSupplier;stringFluxSupplier;processorSupplier;scatter
+    stream:
+      function:
+        bindings:
+          consume-in-0: input #別名
+      bindings:
+        input:
+          destination: kafka-topic-test
+#        uppercase-in-0:
+#          destination: kafka-topic-uppercase-in
+#        uppercase-out-0:
+#          destination: kafka-topic-uppercase
+#        stringSupplier-out-0:
+#          destination: kafka-topic-test
+#        stringFluxSupplier-out-0:
+#          destination: kafka-topic-test
+#        processorSupplier-out-0:
+#          destination: kafka-topic-test
+#        scatter-in-0:
+#          destination: topic-scatter-in
+#        scatter-out-0:
+#          destination: topic-scatter-out1
+#        scatter-out-1:
+#          destination: topic-scatter-out2
+#        pollable-in-0:
+#          destination: kafka-topic-test
+#      pollable-source:
+#        pollable
+       route-out-0:
+
+       route-in-0:
