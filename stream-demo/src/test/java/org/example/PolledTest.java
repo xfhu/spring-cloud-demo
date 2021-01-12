@@ -19,6 +19,7 @@ import org.springframework.core.task.TaskExecutor;
 
 public class PolledTest {
 
+    //這個測試有問題
     @Test
     public void samplePollingTest() {
         ApplicationContext context = new SpringApplicationBuilder(SamplePolledConfiguration.class)
