@@ -9,6 +9,8 @@ import org.springframework.cloud.stream.binder.PollableMessageSource;
 import org.springframework.cloud.stream.binding.BinderAwareChannelResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.integration.StaticMessageHeaderAccessor;
+import org.springframework.integration.acks.AcknowledgmentCallback;
 import org.springframework.messaging.support.GenericMessage;
 import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
@@ -34,9 +36,13 @@ public class KafkaConsumerApplication {
 
 
     @Bean
-    public static Consumer<String> consume() {
+    public static Consumer<GenericMessage<String>> consume() {
         return msg -> {
-            System.out.println("consume["+count.incrementAndGet()+"]: " + msg);
+            System.out.println("consume["+count.incrementAndGet()+"]: " + msg.getPayload());
+            if(count.longValue() % 2 == 0) {
+                StaticMessageHeaderAccessor.getAcknowledgmentCallback(msg).noAutoAck();
+                StaticMessageHeaderAccessor.getAcknowledgmentCallback(msg).acknowledge(AcknowledgmentCallback.Status.REQUEUE);
+            }
         };
     }
 
@@ -115,10 +121,10 @@ public class KafkaConsumerApplication {
         };
     }
 
-    @Autowired
+//    @Autowired
     private BinderAwareChannelResolver resolver;
 
-    @Bean
+//    @Bean
     public ApplicationRunner resolveDestination(BinderAwareChannelResolver resolver) {
         return args -> {
             resolver.resolveDestination("kafka-topic-test").send(new GenericMessage<>("app start"));
